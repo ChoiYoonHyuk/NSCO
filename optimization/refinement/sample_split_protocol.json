@@ -1,0 +1,110 @@
+{
+  "study": "split_predictable_control_refinement",
+  "design_role": "Prospective test following negative and mixed the pilot study outcomes; no promise of superiority.",
+  "D": 64,
+  "d": 4,
+  "rho": 0,
+  "candidates": 2,
+  "lambda": 0.8,
+  "contrast_information": "Known contrast supplied to every method; final labels remain noisy.",
+  "theta": 4.0,
+  "batch_size": 256,
+  "step_base": 0.03125,
+  "step_schedule": "base*rate*(1+global_update/256)^(-3/4); no reset, clipping, or normalization during moving SGD",
+  "pilot_fraction": 0.5,
+  "rate_grid": [
+    0.0625,
+    0.125,
+    0.25,
+    0.5,
+    1.0,
+    2.0,
+    4.0,
+    8.0
+  ],
+  "alpha_grid": [
+    0.0,
+    0.015625,
+    0.0625,
+    0.25,
+    1.0
+  ],
+  "families": [
+    "sgd",
+    "sgd_blend",
+    "plain_shrink",
+    "cv_shrink",
+    "pilot"
+  ],
+  "validation_n": 32768,
+  "test_n": 32768,
+  "development_seeds": [
+    260101,
+    260102,
+    260103,
+    260104
+  ],
+  "confirmation_seeds": [
+    260201,
+    260202,
+    260203,
+    260204,
+    260205,
+    260206,
+    260207,
+    260208,
+    260209,
+    260210,
+    260211,
+    260212,
+    260213,
+    260214,
+    260215,
+    260216
+  ],
+  "cases": [
+    {
+      "name": "gaussian_k6",
+      "depth": 6,
+      "n": 524288,
+      "readouts": [
+        "first_value",
+        "parity6",
+        "majority_product6"
+      ],
+      "primary_readouts": [
+        "first_value",
+        "parity6"
+      ]
+    },
+    {
+      "name": "gaussian_k9",
+      "depth": 9,
+      "n": 1048576,
+      "readouts": [
+        "parity9"
+      ],
+      "primary_readouts": [
+        "parity9"
+      ]
+    }
+  ],
+  "streams": {
+    "target": 26001,
+    "training": 26002,
+    "validation": 26003,
+    "test": 26004
+  },
+  "source_lock_files": [
+    "sample_split_protocol.json",
+    "scripts/gaussian_kernels.py",
+    "scripts/soft_attention.py",
+    "scripts/sample_split.py",
+    "scripts/sample_split_report.py"
+  ],
+  "selection": "Four development seeds: minimum mean noisy final-label validation error within each family/readout/case. Ties prefer smaller alpha then smaller rate. Choices frozen before confirmation; no seed, rate, alpha or budget extension.",
+  "primary_inference": "CV minus SGD, SGD-blend, plain-shrink and pilot for C1/parity6/parity9: 12 two-sided paired sign-flip tests, assuming paired-sign symmetry, one Holm family at .05. All sixteen seeds retained. Nominal t15 intervals are not simultaneous.",
+  "secondary_scope": "MP6, frame/subspace errors, native SGD soft loss and finite-theory checks descriptive. Uniform calibration F=lambda*h gives risk2lambda^2*hard_error, not independent soft improvement.",
+  "budget_scope": "Every full-budget method uses at most n unique training labels per seed, paired streams, and equal development validation data. Pilot-only uses n/2 labels and is a mechanism control. CV/plain/SGD-blend each search40 rate-alpha candidates; ordinary SGD/pilot search8 rates. Runtime and compute are not asserted equal.",
+  "failure_policy": "Preserve nonfinite states, mismatches, partial outputs and all adverse/inconclusive outcomes. Do not replace runs or alter source after performance outcome access; an implementation defect requires a documented new protocol/version. No continuation until a desired sign appears."
+}

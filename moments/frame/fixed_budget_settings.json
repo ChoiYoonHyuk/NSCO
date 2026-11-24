@@ -1,0 +1,68 @@
+{
+  "D": 32,
+  "d": 4,
+  "candidates_each_step": 2,
+  "lambda": 0.8,
+  "mu": 0.8,
+  "seeds": [
+    9101,
+    9102,
+    9103,
+    9104,
+    9105,
+    9106
+  ],
+  "value_axis": "Ambient coordinate zero; key-only frame has D-1 rows and is prepended with a zero row when interpreted in ambient space.",
+  "model": "q uniform on S^(d-1), all candidate records independent N(0,I_D), feasible target frame from Gaussian QR with positive diagonal. First argmax z_i^T Pq; later argmax z_i^T PP^T z_previous, without query normalization. Values are signs of independent raw Gaussian value coordinates.",
+  "noise": "Per-example zeta and xi are independent signs with P(+1)=0.9 and independent of all inputs. Final readouts share zeta for pairing; the auxiliary label is exactly xi times the selected FIRST VALUE SIGN. Selected indices are never learner targets.",
+  "streams": {
+    "frame": 9001,
+    "initial_frame": 9002,
+    "moment_training": 9011,
+    "sgd_training": 9021,
+    "clean_test": 9031,
+    "subspace_training": 9041,
+    "orientation_training": 9042,
+    "general_aux_training": 9043
+  },
+  "moments": {
+    "depths": [
+      3,
+      6,
+      9
+    ],
+    "readouts": [
+      "parity",
+      "majority_product"
+    ],
+    "sample_sizes": [
+      256,
+      1024,
+      4096,
+      16384,
+      65536,
+      262144
+    ],
+    "generation_chunk_size": 4096,
+    "methods": [
+      "final_derivative",
+      "first_value"
+    ],
+    "statistic": "R1=sum_i g_i(z_i-zbar). Final mean averages Y*partial_1 G(b)*R1*q^T, b_h=mean_i sign(g_hi). Auxiliary mean averages noisy first VALUE*R1*q^T. No index observation is used.",
+    "derivative_mass": "parity:2^(1-k); majority product:(10/13)*(13/32)^(k/3); terminal first-position mass is zero at k>1 and is recorded only as a null diagnostic, not normalized or polar-completed into a learner.",
+    "exact_mse": "For s=lambda*c0*a2/d and final kappa, E||M/(s*kappa)-P||F^2/d=(D-1)/(n*d*s^2*kappa)-1/n. Auxiliary substitutes s=mu*c0*a2/d and kappa=1. c0=sqrt(2/pi),a2=1/sqrt(pi).",
+    "projection": "Thin SVD polar; retain all singular values/ranks, including rank-deficient target-independent completions. Frame error retains initial-query orientation; no Procrustes alignment.",
+    "test_examples_per_seed": 8192,
+    "soft_inverse_temperature": 64,
+    "metrics": [
+      "signal-rescaled normalized moment MSE",
+      "oriented frame error",
+      "hard clean readout error",
+      "soft Boolean clean error",
+      "hard-soft disagreement",
+      "path disagreement",
+      "moment rank",
+      "nonzero public derivative count"
+    ]
+  }
+}

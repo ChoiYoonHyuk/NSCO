@@ -1,0 +1,42 @@
+{
+  "design": "Fixed before training or observing new teacher outcomes. Same hidden frames and candidate streams, final-only training on parity or disjoint triplet-majority product, evaluating all retrieved paths and both readouts on the same clean held-out inputs.",
+  "depth": 12,
+  "D": 16,
+  "d": 2,
+  "teachers": [
+    753401,
+    753402,
+    753403,
+    753404,
+    753405,
+    753406,
+    753407,
+    753408,
+    753409,
+    753410,
+    753411,
+    753412,
+    753413,
+    753414,
+    753415,
+    753416
+  ],
+  "rates": [
+    0.02,
+    0.003
+  ],
+  "arms": [
+    "parity",
+    "maj3"
+  ],
+  "batch": 256,
+  "examples": 131072,
+  "checkpoints": [
+    32768,
+    65536,
+    131072
+  ],
+  "test": 8192,
+  "primary": "At the 131072-label endpoint, initial Adam rate .020, compare mean difference in clean exact-path agreement rates (majority-product-trained minus parity-trained). Independent paired teachers (n=16). Two-sided exact sign test omitting ties (alpha=.05). Difference in percentage points with percentile teacher-paired bootstrap using 50000 draws, numpy PCG64 seed 7534017.",
+  "secondary": "No search for learning rate, budget or seed. Report both rates, checkpoints, both deployment tasks, and native errors, plus exact path agreement for both. Test-only truth paths shared across evaluations. Only primary is confirmatory, all other summaries pointwise descriptive. Independently flipped final labels at probability 0.10, with same per-record sign flip between two tasks. Same architecture and Gaussian small init, common record stream, keys, paired teachers and 8192 heldout records; one online pass. Sufficient fixed label budget; no process supervision."
+}

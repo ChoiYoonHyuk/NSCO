@@ -1,0 +1,65 @@
+{
+  "design": "Prospective frozen independent replication of the earlier 12-hop Gaussian attention comparison. Previous eight teachers not included.",
+  "depth": 12,
+  "rates": [
+    0.003,
+    0.02
+  ],
+  "arms": [
+    "final",
+    "clean",
+    "noisy"
+  ],
+  "seeds": [
+    731901,
+    731902,
+    731903,
+    731904,
+    731905,
+    731906,
+    731907,
+    731908,
+    731909,
+    731910,
+    731911,
+    731912,
+    731913,
+    731914,
+    731915,
+    731916
+  ],
+  "batch": 256,
+  "test_examples": 8192,
+  "grid_examples": [
+    1024,
+    2048,
+    3072,
+    4096,
+    6144,
+    8192,
+    12288,
+    16384,
+    24576,
+    32768,
+    49152,
+    65536,
+    98304,
+    131072,
+    196608,
+    262144
+  ],
+  "label_caps": [
+    131072,
+    262144
+  ],
+  "max_examples": {
+    "final": 262144,
+    "clean": 131072,
+    "noisy": 131072
+  },
+  "primary": "At 131072 total training labels and fixed initial Adam rate 0.003, compare held-out clean parity error for clean-C1 plus final vs final only. Equal weights over 16 paired teachers. Two-sided exact paired sign test omitting ties, alpha .05, with the effect summarized by mean paired percentage-point difference and 95% paired percentile bootstrap interval (50000 draws with replacement of 16 teachers, NumPy Generator PCG64 seed 7319011).",
+  "secondary": "Report all three arms at both fixed rates at 131072 and 262144 labels, also at 131072 examples; 0.02 vs 0.02 is the explicit fairness comparison because it attained lower preceding k12 error in both historical arms. Compare .003 augmented with .020 final at both caps. Compare noisy vs clean within each rate. All intervals pointwise/descriptive and no other confirmatory tests. No selection or early stopping with these data.",
+  "outcome": "Clean parity error from hard deployment of the polar-projected frame, on 8192 held-out records per teacher common to all arms, rates and checkpoints. Report per-teacher differences, threshold crossings (<=10% clean error), reaches and right-censoring retaining all teachers, and both central observed order statistics. Checkpoint threshold incurs no training decisions.",
+  "streams": "Same teacher, independent initialization, training stream and held-out test per seed as previous code; all arms/rates receive the identical record prefix, initial parameter and test per teacher. Final labels independently flipped with probability .10. For noisy-C1, flip the true first sign with separate .10 Bernoulli draws using generator slot 19, shared across rates. C1 alone never determines training budget of final-only. Stream generated online, single-use per arm. No tuning or data files.",
+  "frozen_optimizer": "Previously implemented normalized 2-dimensional query, D=16 d=2, binary Gaussian keys, uniform independent signs, hard teacher; theta=4, norm-.05 Gaussian-weight start entries; Adam with unit gradient clipping, eta/sqrt(1+(s-1)/128), beta1=.9 beta2=.999 epsilon=1e-8."
+}

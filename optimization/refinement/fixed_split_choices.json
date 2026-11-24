@@ -1,0 +1,116 @@
+{
+  "choices": {
+    "gaussian_k6": {
+      "first_value": {
+        "sgd": {
+          "rate": 0.25,
+          "alpha": 1.0,
+          "development_noisy_error": 0.10301971435546875
+        },
+        "sgd_blend": {
+          "rate": 0.25,
+          "alpha": 1.0,
+          "development_noisy_error": 0.10301971435546875
+        },
+        "plain_shrink": {
+          "rate": 0.25,
+          "alpha": 0.25,
+          "development_noisy_error": 0.1044158935546875
+        },
+        "cv_shrink": {
+          "rate": 0.25,
+          "alpha": 0.25,
+          "development_noisy_error": 0.1040191650390625
+        },
+        "pilot": {
+          "rate": 0.25,
+          "alpha": 0.0,
+          "development_noisy_error": 0.10530853271484375
+        }
+      },
+      "parity6": {
+        "sgd": {
+          "rate": 1.0,
+          "alpha": 1.0,
+          "development_noisy_error": 0.13938140869140625
+        },
+        "sgd_blend": {
+          "rate": 1.0,
+          "alpha": 1.0,
+          "development_noisy_error": 0.13938140869140625
+        },
+        "plain_shrink": {
+          "rate": 2.0,
+          "alpha": 0.015625,
+          "development_noisy_error": 0.1767730712890625
+        },
+        "cv_shrink": {
+          "rate": 2.0,
+          "alpha": 0.0625,
+          "development_noisy_error": 0.17455291748046875
+        },
+        "pilot": {
+          "rate": 2.0,
+          "alpha": 0.0,
+          "development_noisy_error": 0.17737579345703125
+        }
+      },
+      "majority_product6": {
+        "sgd": {
+          "rate": 0.5,
+          "alpha": 1.0,
+          "development_noisy_error": 0.1175537109375
+        },
+        "sgd_blend": {
+          "rate": 0.5,
+          "alpha": 1.0,
+          "development_noisy_error": 0.1175537109375
+        },
+        "plain_shrink": {
+          "rate": 0.5,
+          "alpha": 0.0625,
+          "development_noisy_error": 0.1262664794921875
+        },
+        "cv_shrink": {
+          "rate": 0.5,
+          "alpha": 0.0625,
+          "development_noisy_error": 0.12551116943359375
+        },
+        "pilot": {
+          "rate": 0.5,
+          "alpha": 0.0,
+          "development_noisy_error": 0.1268463134765625
+        }
+      }
+    },
+    "gaussian_k9": {
+      "parity9": {
+        "sgd": {
+          "rate": 4.0,
+          "alpha": 1.0,
+          "development_noisy_error": 0.2809600830078125
+        },
+        "sgd_blend": {
+          "rate": 4.0,
+          "alpha": 1.0,
+          "development_noisy_error": 0.2809600830078125
+        },
+        "plain_shrink": {
+          "rate": 4.0,
+          "alpha": 0.0625,
+          "development_noisy_error": 0.36885833740234375
+        },
+        "cv_shrink": {
+          "rate": 4.0,
+          "alpha": 0.25,
+          "development_noisy_error": 0.3655853271484375
+        },
+        "pilot": {
+          "rate": 4.0,
+          "alpha": 0.0,
+          "development_noisy_error": 0.37674713134765625
+        }
+      }
+    }
+  }
+}

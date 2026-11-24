@@ -1,0 +1,17 @@
+{
+  "study": "Additional synthetic readout information experiments",
+  "status": "fixed before confirmation outcomes",
+  "noise_contrast": 0.8,
+  "generation_chunk": 4096,
+  "test_examples": 8192,
+  "same_beta": {"D": 32, "d": 4, "k": 4, "seeds": [73101,73102,73103,73104,73105,73106,73107,73108,73109,73110,73111,73112], "budgets": [1024,2048,4096,8192,16384,32768,65536,131072,262144], "frame_threshold": 0.35, "beta": 0.203125, "kappa_A": 0.40625, "kappa_B": 0.15625, "expected_threshold_ratio": 2.6},
+  "position": {"D": 16, "d": 2, "k": 3, "seeds": [73201,73202,73203,73204,73205,73206,73207,73208], "budgets": [2048,8192,32768,131072,262144], "unlabeled_selection_inputs": 4096, "terminal_subspace_fraction": 0.5, "orientation_stream_independent": true},
+  "sgd": {"D": 16, "d": 2, "k": 3, "seeds": [73201,73202,73203,73204,73205,73206,73207,73208], "budgets": [2048,8192,32768,131072,262144], "batch_size": 256, "theta": 4.0, "initializations": ["zero","random_sd_0.05"], "initial_lr": 0.125, "decay_offset": 256.0, "decay_power": 0.75, "optimizer": "ordinary SGD, no momentum, no clipping", "device": "cpu", "deployment": ["native", "polar"], "fixed_learning_rate_no_test_selection": true},
+  "streams": {"frame": 1, "test": 2, "training": 3, "orientation": 4, "initialization": 5, "selection": 6, "sgd_training": 7},
+  "inference": "Pointwise 95% Student t intervals across independent seeds; paired bootstrap percentile CI for log-interpolated crossing ratio, 10000 resamples. No theorem-exponent claim from finite-depth measurements.",
+  "scope": "Synthetic fresh Gaussian inputs only. No natural-language dataset copied to local desktop. All test predictions and synthetic inputs retained on server; only metrics, figures, source, compact parameters and manifests may be collected.",
+  "missing_identification": "Terminal first-position derivative and zero-init SGD gradients are exactly zero. No arbitrary polar completion is called an estimate; zero-model prediction uses public candidate mean with deterministic positive tie. Frame/projector metrics are null where unidentified.",
+  "label_accounting": "Same-beta n final labels. First-position selection n final labels plus 4096 unlabeled selection examples. Terminal selection n/2 subspace labels plus independent n/2 orientation labels plus 4096 unlabeled selection examples. SGD n fresh final labels. Test examples excluded from training counts and reported separately.",
+  "smoke_seeds": [73991],
+  "no_outcome_dependent_grid_changes": true
+}

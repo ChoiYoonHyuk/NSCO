@@ -1,0 +1,17 @@
+{
+  "study": "Ordinary one-pass optimizers on readouts with equal Fourier weight at every degree",
+  "readouts": ["A = c1*maj(c2,c3,c4)", "B = c2*maj(c1,c3,c4)"],
+  "beta": 0.203125, "kappa1": [0.40625,0.15625],
+  "D":32,"d":4,"k":4,"candidates":2,"temperature":4,"flip_probability":0.1,
+  "seeds":[790113,790127,790139,790151,790163,790181,790193,790211,790223,790237,790249,790261],
+  "n":[1024,2048,4096,8192,16384,32768,65536,131072],
+  "test":8192, "probe_batches":64, "batch":256,
+  "initialization":"zero, both optimizers and tasks",
+  "sgd_lr":0.1,"adam_lr":0.003,
+  "training":"Prior Gaussian study's lower candidate rate for each optimizer; no tuning or validation labels. Every optimizer/readout sees a common stream once. Global clip per model norm 1; time decay (1+(t-1)/128)^(-1/2); no iterate averaging; Adam betas 0.9 and 0.999, eps 1e-8. Final noisy answer only; shared independent sign flip on each paired record. Clean hard argmax after polar deployment.",
+  "primary":"Within each teacher, B minus A difference in clean hard error averaged over all eight equally weighted log2 checkpoints. Positive differences indicate lower integrated error for readout A. Two-sided exact paired sign-flip p-values across 12 independently generated teachers per optimizer, Holm family of two. These are finite-grid, initialization- and optimizer-specific contrasts.",
+  "secondary":"For each optimizer and task report first grid attaining clean hard error <=0.10 and normalized polar frame error <=0.35, explicitly right censor; no interpolation. Also report normalized frame and projector errors, all hop and path accuracies, initial gradient noise-corrected squared minibatch SNR. Estimate across-seed means and pointwise paired-t intervals. Compare empirical behavior to the ordering of kappa1 without claiming its analytic ratio governs SGD.",
+  "streams":{"frame":1,"training":2,"evaluation":3,"gradient":4},
+  "test_selection":false,
+  "prior_budget_audit":"Post hoc bookkeeping only: match deployed total training bit observations at all observed common totals in the previous k=6 curves (n final vs n/2 augmented), annotating clean and noisy counts, per-arm development overhead and independent probe/test costs. No refits. No equal per-arm lifetime budget exists on that earlier grid unless development is amortized. Use small random init for reported contrasts, keep raw per-seed rows. Do not compare labels and examples as interchangeable costs."
+}

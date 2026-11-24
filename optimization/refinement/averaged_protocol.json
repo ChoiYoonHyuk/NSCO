@@ -1,0 +1,135 @@
+{
+  "study": "averaged_matched_averaging_signed_refinement_and_clipped_sgd",
+  "D": 64,
+  "d": 4,
+  "rho": 0,
+  "candidates": 2,
+  "lambda": 0.8,
+  "theta": 4.0,
+  "batch_size": 256,
+  "step_base": 0.03125,
+  "condition_ratio_threshold": 1e-08,
+  "alpha_grid": [
+    -0.0625,
+    -0.03125,
+    -0.015625,
+    0.0,
+    0.015625,
+    0.03125,
+    0.0625,
+    0.25,
+    1.0
+  ],
+  "gate_delta": 0.05,
+  "validation_n": 32768,
+  "test_n": 32768,
+  "development_seeds": [
+    280101,
+    280102,
+    280103,
+    280104
+  ],
+  "confirmation_seeds": [
+    290201,
+    290202,
+    290203,
+    290204,
+    290205,
+    290206,
+    290207,
+    290208,
+    290209,
+    290210,
+    290211,
+    290212,
+    290213,
+    290214,
+    290215,
+    290216
+  ],
+  "streams": {
+    "target": 28001,
+    "training": 28002,
+    "validation": 29003,
+    "test": 29004
+  },
+  "cases": [
+    {
+      "name": "gaussian_k6",
+      "depth": 6,
+      "n": 524288
+    },
+    {
+      "name": "gaussian_k9",
+      "depth": 9,
+      "n": 1048576
+    }
+  ],
+  "configurations": [
+    {
+      "id": "c1_ordinary",
+      "case": "gaussian_k6",
+      "readout": "first_value",
+      "rate": 8.0,
+      "policy": "ordinary",
+      "primary": true
+    },
+    {
+      "id": "p6_ordinary",
+      "case": "gaussian_k6",
+      "readout": "parity6",
+      "rate": 1.0,
+      "policy": "ordinary",
+      "primary": true
+    },
+    {
+      "id": "mp6_ordinary",
+      "case": "gaussian_k6",
+      "readout": "majority_product6",
+      "rate": 0.5,
+      "policy": "ordinary",
+      "primary": true
+    },
+    {
+      "id": "p9_clip",
+      "case": "gaussian_k9",
+      "readout": "parity9",
+      "rate": 4.0,
+      "policy": "clip1",
+      "primary": true
+    },
+    {
+      "id": "p9_ordinary",
+      "case": "gaussian_k9",
+      "readout": "parity9",
+      "rate": 4.0,
+      "policy": "ordinary",
+      "primary": false
+    }
+  ],
+  "correction_families": [
+    "avg_plain",
+    "avg_online",
+    "avg_meancontrol"
+  ],
+  "selection_file": "fixed_average_choices.json",
+  "policy": "eta=(rate/32)*(1+t/256)^(-3/4). Clip1 projects each full gradient onto the Frobenius unit ball before the ordinary update. No state normalization/projection/label filtering. Exact order is given in averaged_sgd.py.",
+  "averaging": "Average every post-update ambient iterate in the second half, then polar once. All affine proposals use this same averaged frame and same trajectory; endpoint is descriptive.",
+  "controls": "Online control uses the pre-batch iterate. Mean control uses the mean of previous prefix iterates before midpoint, resets to zero at midpoint, then uses the mean of previous suffix iterates. Both are conditioned by the same singular-value ratio rule and retain all A contributions. No future observations enter a control.",
+  "selection": "For each fixed configuration/family select alpha by mean noisy validation hard error over four development runs. Ties use smaller absolute alpha, then numeric alpha. Freeze before any new confirmation outcomes. Matrix error/covariance diagnostics never choose deployed coefficients.",
+  "gate": "For each trained run, form all24 nonzero signed proposals before independent validation. For each candidate count m disagreements with averaged baseline and w correct candidate noisy predictions on those disagreements. Accept only binomial upper-tail under p=.5 <=.05/24, then choose lowest observed noisy error among accepted, ties abs alpha then alpha then index. Fallback exactly the averaged baseline. Delta is per trained configuration, not simultaneous across the entire empirical suite.",
+  "primary_inference": "Nine two-sided paired sign-flip tests, all16 new confirmation runs: mean-control correction minus matched averaged SGD and gated candidate minus matched averaged SGD in each of four primary configurations; clipped averaged SGD minus ordinary averaged SGD at P9. One Holm family at .05, with the sign-symmetry assumption stated. Nominal t15 intervals are pointwise.",
+  "secondary_scope": "All plain/online corrections, endpoint SGD, soft risks, gate selection rates, matrix covariances, control increment variances and backend differences are descriptive. The correction must be compared with the same clipped averaged baseline; clipping gains are not unique correction gains.",
+  "budget_scope": "All methods use n unique training labels. Proposals share the exact trajectory and observations; the gate additionally uses32768 noisy validation labels available to all methods. The trained baseline configuration is selected from prior development; no equal search-compute claim. No test/teacher information chooses a model.",
+  "development_provenance": "The four historical development training streams are reused and treated as development. New validation streams are used for signed coefficients. New confirmation seeds290201..216 have not been used in any the preceding development study study. Numerical policy/rate was selected by separate nine-cell/four-old-development-stream analysis before this protocol.",
+  "failure_policy": "Keep every completed condition, adverse/inconclusive result and numerical discrepancy. No performance-driven retries, extension, dropping or tolerance relaxation. Any implementation repair requires separately preserved provenance.",
+  "source_lock_files": [
+    "averaged_protocol.json",
+    "scripts/gaussian_kernels.py",
+    "scripts/soft_attention.py",
+    "scripts/sample_split.py",
+    "scripts/averaged_sgd.py",
+    "scripts/predictable_control.py",
+    "scripts/averaged_report.py"
+  ]
+}

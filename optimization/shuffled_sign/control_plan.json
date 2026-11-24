@@ -1,0 +1,39 @@
+{
+  "protocol": "Frozen prospective matched-label-placebo ablation, all cells reported. Reuse no confirmation or prior experiment teachers.",
+  "seeds": [
+    726001,
+    726002,
+    726003,
+    726004,
+    726005,
+    726006,
+    726007,
+    726008,
+    726009,
+    726010,
+    726011,
+    726012
+  ],
+  "depth": 12,
+  "rates": [
+    0.003,
+    0.02
+  ],
+  "arms": [
+    "final",
+    "true",
+    "shift"
+  ],
+  "records": 65536,
+  "test": 8192,
+  "batch": 256,
+  "checkpoints": [
+    16384,
+    32768,
+    65536
+  ],
+  "primary": "At k=12, base learning rate .003, 131072 total training labels per augmented arm, compare true first-sign against a within-batch cyclic shift by one record. Use clean hard deployed parity error, true-minus-shift in percentage points, two-sided exact sign test over 12 paired teachers (ties omitted). Describe average paired difference with 95% teacher-level percentile bootstrap interval.",
+  "secondary": "Rate .020 repeats the comparison. Report all per-teacher errors and matched-record final-only baseline at both rates. Final-only uses 65536 labels for 65536 records and cannot be counted as an equal-label comparator. True and shifted auxiliary arms receive exactly the same multiset of additional labels in every minibatch. These are mechanistic/descriptive comparisons. No inference on asymptotic query exponent.",
+  "pairing": "Common normalized query, teacher, raw feature and noisy parity stream, shared small random initialization, fixed held-out 8192 records and signs across 6 arms per teacher. Each of 65536 distinct records is consumed once. Fixed cyclic shift by one across all 256 records of a minibatch is a derangement, with no independent pseudo-label distribution or batch-count difference. No early stopping or hyperparameter selection. First-sign labels are clean only in the informative arm.",
+  "resampling": "50000 bootstrap resamples of all 12 teachers, same draws for all cells, NumPy default_rng(726099), pointwise percentile intervals."
+}

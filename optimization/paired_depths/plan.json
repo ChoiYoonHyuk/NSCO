@@ -1,0 +1,16 @@
+{
+  "design": "Fixed before the deep-run outcomes were generated. Synthetic Gaussian two-candidate shared-frame retrieval, parity, clean first selected sign C1, final-label noise 0.10.",
+  "depths": [9, 12],
+  "rates": [0.003, 0.02],
+  "arms": ["final", "value"],
+  "seeds": [721301, 721313, 721327, 721339, 721351, 721367, 721379, 721393],
+  "batch": 256,
+  "max_examples": 131072,
+  "test_examples": 8192,
+  "grid_examples": [1024, 2048, 3072, 4096, 6144, 8192, 12288, 16384, 24576, 32768, 49152, 65536, 98304, 131072],
+  "primary": "Clean hard polar-deployment error difference, auxiliary minus final, at 131072 total labels, depth 9, Adam rate .02; two-sided exact sign test over independent paired teachers (ties omitted), teacher-paired percentile bootstrap 95% CI (50000 draws, seed 721001).",
+  "secondary": "Report the same comparison at both depths and both historical rates, plus equal-examples comparisons at 131072 examples. Only the primary test is confirmatory. Report individual differences and descriptive paired bootstrap intervals for all cells.",
+  "crossing": "First evaluated checkpoint with clean error <=10%, independent of training decisions. Count reaches and report the two central order statistics including right-censoring. Compare at common label cap 131072 as well as full example cap. No censor-imputed speedup.",
+  "sharing": "Fresh online examples used once per model. Within each paired teacher and depth, common training, initial weights and holdout across arms and rates. No early stopping or optimizer tuning.",
+  "scope": "A measured difference is specific to this synthetic Gaussian experiment and optimizer. A finite-budget result and finite depth cannot estimate the SQ precision exponent or demonstrate asymptotic separation."
+}

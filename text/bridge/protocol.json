@@ -1,0 +1,93 @@
+{
+  "seeds": [
+    1101,
+    2202,
+    3303,
+    4404,
+    5505
+  ],
+  "readouts": {
+    "first": 2,
+    "last": 2,
+    "parity": 2,
+    "first3": 3,
+    "last3": 3,
+    "parity3": 3,
+    "majority": 3
+  },
+  "arms": [
+    "final",
+    "first_value",
+    "first_index",
+    "all_indices"
+  ],
+  "frozen_configs": {
+    "e5": [
+      1,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0
+    ],
+    "e5_bge_link": [
+      1,
+      0.45,
+      1,
+      1,
+      0,
+      0.6,
+      0,
+      0,
+      1,
+      1.5,
+      0.25
+    ],
+    "bge_link": [
+      0.15,
+      1,
+      0,
+      0,
+      0,
+      1,
+      0,
+      0,
+      0.45,
+      1.5,
+      0.4
+    ],
+    "lexical_start": [
+      0.9,
+      0.25,
+      2.5,
+      2.5,
+      0,
+      1,
+      0,
+      0,
+      0.7,
+      2,
+      0
+    ]
+  },
+  "epochs": 1,
+  "train_sign_draws_per_question": 8,
+  "selection_sign_draws": 64,
+  "test_sign_check": 64,
+  "optimizer": "Adam, lr 0.055, batch size 32; 11 shared scalar scoring coefficients; gradient norm clip 2",
+  "shrinkage": [
+    0,
+    0.3333333333333333,
+    1
+  ],
+  "selection": "minimize identical validation 64-draw final-label error. First choose frozen initialization, then per-arm per-seed residual scale. Ties prefer the first frozen entry and smaller scale.",
+  "loss": "Exact soft path marginal binary cross entropy. Each auxiliary adds one equally weighted mean loss: C1 BCE, I1 first CE, or mean of all teacher-forced per-hop CEs. The average keeps duplicated First/C1 data from changing gradient scales.",
+  "training": "Fixed question permutation and eight independent publicly observed sign draws per question and seed. Candidate order independent of seed, fixed by question ID before labels. Only declared training labels passed to optimize().",
+  "evaluation": "Greedy rollout, exact random-sign error, complete ordered path, unordered set, per-position rollout and independently sampled sign errors. Paired cluster bootstrap conditional on the fixed five seeds.",
+  "known_source": "MuSiQue source and E5 caches previously analyzed. Official train for train/selection, official dev for held-out controlled question evaluation. Supplied candidates contain every gold support."
+}

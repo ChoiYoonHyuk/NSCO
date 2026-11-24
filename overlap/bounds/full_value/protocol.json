@@ -1,0 +1,12 @@
+{
+  "purpose": "Two-sided interval for the full-public binary parity renewal root at d=2 and rho=1",
+  "trials": 33554432,
+  "batch": 131072,
+  "last_excursion": 22,
+  "seed": 20261121161,
+  "rng": "PCG64DXSM",
+  "bernstein_u": 10,
+  "tail": "w_j <= 2^(-j-1), j>22",
+  "root_grid_step": "1/10000",
+  "report_coefficient_digits": 3
+}

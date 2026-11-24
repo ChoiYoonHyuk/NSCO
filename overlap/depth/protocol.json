@@ -1,0 +1,9 @@
+{
+  "dimensions": [2], "ambient": [16,32], "overlaps": [0.0,0.5,1.0], "depths": [3,5,7,9],
+  "budgets": [4096,8192,16384,32768,65536,131072,262144,524288,1048576,2097152],
+  "seeds": [2026112201,2026112202,2026112203,2026112204,2026112205,2026112206],
+  "coefficient_seed":2026111877,"coefficient_examples":131072,"test_examples":16384,
+  "batch_size":4096,"lambda":0.8,"prediction_threshold":0.125,"frame_threshold":0.35,
+  "perturbed_depths":[5,9],"direction_degrees":15,"magnitude_multiplier":0.75,
+  "definition":"First observed nested grid budget meeting threshold. Non-crossing seeds remain right-censored. Fresh paired seeds. No model selection or epochs."
+}

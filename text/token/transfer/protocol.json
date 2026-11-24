@@ -1,0 +1,15 @@
+{
+  "study": "Known-rule and frozen transfer controls for signed token parity",
+  "fit_seeds": [127,233,349,461,587],
+  "new_input_seeds": [2108101,2108102,2108103,2108104,2108105],
+  "sequences_per_seed": 2048,
+  "lengths": [98,196],
+  "depths": [3,7],
+  "training_epochs": 0,
+  "positive_control": "Exact public induction rule implemented from raw tokens, independent of generator indices: latest earlier equal character, then take its successor.",
+  "negative_control": "Always take the nearest earlier admissible successor position, independent of token identity.",
+  "learned_models": "Frozen parity endpoints of the previously released successor-key and same-position-key models. Preserve fit checksums. No parameter/temperature selection or access to indices at inference.",
+  "query": "Per seed produce 2048 no-repeat four-character sequences by iid uniform transitions, retain the length-98 prefix and length-196 whole sequence. At each length, choose a query uniformly among positions in the latter half with at least seven valid hops. Query is paired across models and both depths; lengths share prefixes, with distinct sampled queries.",
+  "primary": "Frozen successor-model exact complete-path accuracy on the length-196, seven-hop condition, reporting counts and the five paired per-fit values; known-rule comparator receives the true rule without training.",
+  "secondary": "Full 2x2 grid, realized public-sign parity error, expected error for independent sign draws, recency-only and unshifted control. No general claim for new alphabet, architecture or task rule."
+}

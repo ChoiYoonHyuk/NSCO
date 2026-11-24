@@ -1,0 +1,184 @@
+{
+  "name": "Bounded residual adaptation of a frozen contextual two-hop retriever",
+  "status": "The benchmark and model protocol were fixed before training and evaluation on the new 2Wiki cohort.",
+  "motivation": "Learned projections can distort pretrained E5 geometry. Anchor the score to frozen E5 and bound the learned residual.",
+  "data": {
+    "source": "Official MuSiQue-Ans v1.0 train; strict two-hop reference structure and two distinct supports",
+    "eligible_train": 14374,
+    "excluded_nonchain_twohop": 2,
+    "split": "Reuse the fixed 4,927 training, 100 validation and 200 lockbox questions. The lockbox had been inspected previously.",
+    "selection_metric": "Terminal R@1 on tune only, same criterion for every condition",
+    "lockbox": "Only selection-stage models are scored on the previously examined lockbox.",
+    "refit": "Fresh initialization on all 14374 eligible official training examples; ceil(selected_steps * 14374 / n_purged_train)",
+    "official_dev": "All1252 strict2hop MuSiQue dev; previously inspected source, exploratory",
+    "external": "All remaining eligible strict directed two-hop 2Wiki dev examples after excluding prior 2000 evaluation IDs and known normalized question matches. Input-only manifest locks exact counts and clean masks before encoding/prediction. New instances from an already studied distribution, not a new dataset. Hotpot7405 is now seen and exploratory.",
+    "input_fields": [
+      "composed question",
+      "candidate title",
+      "candidate paragraph text"
+    ],
+    "oracle_inference": false,
+    "new_external_counts": {
+      "all": 1563,
+      "clean_musique_train": 1534,
+      "clean_previous_eval": 929,
+      "clean_all_sources": 915
+    },
+    "new_external_manifest": "data/wiki_transfer/manifest.json"
+  },
+  "features": {
+    "encoder": "intfloat/e5-base-v2",
+    "revision": "f52bf8ec8c7124536f0efb74aca902b2995e5bcd",
+    "frozen": true,
+    "max_length": 512,
+    "pooling": "bf16 encoder, masked float32 mean, L2 normalized",
+    "first_query": "query: {question}",
+    "context_query": "query: {question}\\n{candidate.title}\\n{candidate.text}",
+    "passage": "passage: {candidate.title}\\n{candidate.text}",
+    "every_candidate_context": true
+  },
+  "model": {
+    "input_dim": 768,
+    "projection_dim": 128,
+    "logit_scale": 20.0,
+    "residual_scale": 6.0
+  },
+  "conditions": [
+    {
+      "name": "direct_terminal",
+      "source": "question",
+      "objective": "direct_terminal",
+      "kind": "direct"
+    },
+    {
+      "name": "context_terminal",
+      "source": "context",
+      "objective": "chain_terminal",
+      "kind": "chain"
+    },
+    {
+      "name": "context_first010",
+      "source": "context",
+      "objective": "chain_first010",
+      "kind": "chain"
+    },
+    {
+      "name": "context_first100",
+      "source": "context",
+      "objective": "chain_first100",
+      "kind": "chain"
+    },
+    {
+      "name": "context_random100",
+      "source": "context",
+      "objective": "chain_random100",
+      "kind": "chain"
+    },
+    {
+      "name": "context_teacher",
+      "source": "context",
+      "objective": "chain_teacher",
+      "kind": "chain"
+    },
+    {
+      "name": "passage_terminal",
+      "source": "passage",
+      "objective": "chain_terminal",
+      "kind": "chain"
+    },
+    {
+      "name": "passage_first100",
+      "source": "passage",
+      "objective": "chain_first100",
+      "kind": "chain"
+    },
+    {
+      "name": "question_terminal",
+      "source": "question",
+      "objective": "chain_terminal",
+      "kind": "chain"
+    },
+    {
+      "name": "question_first100",
+      "source": "question",
+      "objective": "chain_first100",
+      "kind": "chain"
+    }
+  ],
+  "optimization": {
+    "seeds": [
+      11,
+      22,
+      33,
+      44,
+      55
+    ],
+    "pilot_seed": 0,
+    "learning_rates": [
+      0.001,
+      0.003
+    ],
+    "max_steps": 1200,
+    "checkpoints": [
+      0,
+      50,
+      100,
+      200,
+      400,
+      600,
+      800,
+      1000,
+      1200
+    ],
+    "batch_size": 128,
+    "optimizer": "AdamW",
+    "weight_decay": 0.01,
+    "gradient_clip": 1.0,
+    "tie_break": "earliest checkpoint; first cap; first learning rate",
+    "paired_initialization_and_draws": true,
+    "random_label": "fixed uniformly sampled valid candidate per example/seed, independent of gold",
+    "tf32": false,
+    "residual_caps": [
+      1.0,
+      4.0
+    ],
+    "initialization": "paired U random and V zero; step zero is raw E5 for every condition and always eligible on tune terminal R@1"
+  },
+  "decoding": {
+    "terminal_primary": "argmax exact marginal over all first candidates",
+    "support_pair_primary": "argmax unordered pair probability, sum both ordered path probabilities",
+    "secondary": [
+      "ordered joint MAP",
+      "first R@1",
+      "ordered path EM"
+    ],
+    "no_revisit": "exclude self-transition in every path model and distinct comparator",
+    "direct": "unconstrained terminal argmax and distinct top2; additionally fixed globally normalized pair energy from raw E5 first scores plus learned direct terminal scores",
+    "intervention": "replace each contextual source vector by the original question in each trained contextual model, retaining first scores and no-revisit mask",
+    "raw_controls": [
+      "frozen E5 direct top2",
+      "frozen E5 contextual chain",
+      "frozen E5 previous-passage chain"
+    ]
+  },
+  "reporting": {
+    "all_conditions": true,
+    "primary_contrasts": [
+      "context_first100 - context_terminal",
+      "context_first100 - frozen_e5_context",
+      "context_first100 - direct_terminal_with_cosine_distinct",
+      "context_first100 - context_teacher",
+      "context_first100 - context_random100"
+    ],
+    "interval": "paired95% Student-t across5seeds on fixed examples, descriptive, no multiplicity correction",
+    "limits": [
+      "Frozen encoder and supplied candidates; not full-corpus QA or an official MDR reproduction",
+      "All methods know the2hop task",
+      "New source lockbox is drawn from a corpus used in earlier studies; it is model-specific held-out evidence",
+      "Pretraining and Wikipedia overlap remain possible",
+      "No guarantee of positive results or universal superiority",
+      "Bounded score changes and tune step-zero fallback do not guarantee test accuracy preservation. Source/Hotpot outcomes cannot be called independent in this study."
+    ]
+  },
+  "score": "20 cosine(x,y) + residual_cap*tanh(6 * dot(Ux,Vy)); U random, V exactly zero; shared U,V across both hops; raw E5 vectors remain fixed. No extra KL penalty or post-test gating."
+}

@@ -1,0 +1,111 @@
+{
+  "name": "Paired two-way seed-by-example bootstrap",
+  "status": "The resampling scheme and endpoints were specified before completion of model evaluation.",
+  "created_utc": "2026-10-20T16:08:26.127041+00:00",
+  "created_unix_seconds": 1792512506.1270413,
+  "implementation_sha256": "7aaf35e9ecfa1508e93f79350d84b173a71482bc48778da1f42dc649625bb32d",
+  "primary_condition": "context_first100",
+  "comparators": [
+    "context_terminal",
+    "frozen_e5_context",
+    "direct_terminal_with_cosine_distinct",
+    "context_teacher",
+    "context_random100"
+  ],
+  "seeds": [
+    11,
+    22,
+    33,
+    44,
+    55
+  ],
+  "rng_seed": 2027108,
+  "repetitions": 2000,
+  "batch_size": 100,
+  "rng": "NumPy PCG64; SeedSequence([2027108,target_index,stratum_index,stream]), stream0=seed draws, stream1=example draws; fixed target and stratum order below",
+  "target_strata": {
+    "lockbox": [
+      "all"
+    ],
+    "musique": [
+      "all",
+      "no_support_candidate_exposure_original_train"
+    ],
+    "hotpot": [
+      "all",
+      "bridge",
+      "comparison",
+      "clean_all_sources",
+      "clean_musique_train",
+      "clean_previously_seen_eval"
+    ],
+    "2wiki": [
+      "all",
+      "compositional",
+      "inference",
+      "clean_musique_train",
+      "clean_previous_eval",
+      "clean_all_sources"
+    ]
+  },
+  "resampling": "For each replicate and stratum, independently sample five seed IDs with replacement and n example IDs with replacement; form the Cartesian product mean difference using the same seed and example draws for every method, contrast, and metric. Seed and example multinomial count weights implement exactly this procedure. The observed point estimate is the mean of all five seeds on every example in the stratum.",
+  "frozen_control": "Broadcast the single frozen_e5_context prediction vector identically to all five seed rows; it has no fitted-seed variability.",
+  "metrics": [
+    "terminal_r1 where directed gold order exists (not HotpotQA)",
+    "unordered support_em",
+    "unordered support_f1 = intersection/2 for two distinct predicted and gold supports"
+  ],
+  "direct_comparator": "Use the predeclared direct model distinct_terminal and distinct_pair fields, not unconstrained direct top2/terminal.",
+  "interval": "2.5th and 97.5th percentiles of 2000 paired bootstrap differences (NumPy percentile method=linear), in percentage points. Approximate descriptive 95% intervals, no multiplicity adjustment; no p-values or universal-superiority claims.",
+  "sampling_limits": "Only five observed training seeds; examples treated exchangeably within each stratum, ignoring shared Wikipedia/component clusters. Nested/overlapping strata and contrasts are not independent. Intervals do not resolve pretraining contamination or adaptivity of previously inspected targets.",
+  "scope": "All 15 fixed target/strata and all five primary contrasts; 195 valid metric contrasts. All four target manifests must be complete and 100 checkpoints frozen with matching hashes before any prediction file is opened. The protocol timestamp must precede the completed-model freeze timestamp. No fitting, method selection, sign-based filtering, or outcome-dependent subsets.",
+  "freshness": "MuSiQue, lockbox, and Hotpot were previously examined. New 2Wiki examples are unseen instances from a previously studied distribution, not a new dataset. Clean subsets remove exact audited question/support-text overlaps, not all pretraining/Wikipedia overlap.",
+  "summary_groups": [
+    [
+      "lockbox",
+      "all"
+    ],
+    [
+      "musique",
+      "all"
+    ],
+    [
+      "hotpot",
+      "all"
+    ],
+    [
+      "2wiki",
+      "all"
+    ],
+    [
+      "hotpot",
+      "clean_all_sources"
+    ],
+    [
+      "2wiki",
+      "clean_all_sources"
+    ]
+  ],
+  "self_tests": [
+    "constant zero distribution and interval",
+    "identical paired methods",
+    "constant nonzero difference",
+    "independently expanded manual weighted Cartesian fixture",
+    "batch-size RNG invariance",
+    "direct-distinct and unordered metric definitions",
+    "raw control broadcast"
+  ],
+  "outputs": [
+    "results/scorers/bootstrap/all_results.json",
+    "results/scorers/bootstrap/bootstrap_distributions.npz",
+    "results/scorers/bootstrap/self_test.json",
+    "results/tables/scorers_bootstrap_summary.tex"
+  ],
+  "release_source_sha256": {
+    "protocol.json": "e908a890f5c1e1c995e81cfbf7c5dbd50308dd6b3ad0451dfeec01bd04135566",
+    "scripts/bounded_model.py": "27e663dd221c2560a1d6f5a1b611a5b67907ffa173d7cb12a7d218807beb92fa",
+    "scripts/frozen_model.py": "1f6bf2e2377b24e459127ffdabd5f5b932610851f1e1b7c149be948c3d509722",
+    "scripts/train_scorers.py": "918ebbd97ad9f00afa00c8f2dc5da28e5bfe8bea77722ae4c7be796f2eae5ce0",
+    "scripts/evaluate_scorers.py": "70838280f32d2e12194e911616437c15d5f3c1ecd4fa9f514564a72c171af4cb"
+  }
+}

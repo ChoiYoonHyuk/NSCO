@@ -1,0 +1,20 @@
+{
+  "name": "Final-label certificates versus fractional derivatives at value-key overlap",
+  "status": "Fixed before outcome generation; independent code review precedes full execution",
+  "D": 32, "d": 4, "N": 2, "lambda": 0.8,
+  "depths": [3, 6, 9], "readouts": ["parity", "majority_product"],
+  "overlaps": [0.0, 0.5, 1.0],
+  "seeds": [31101, 31102, 31103, 31104, 31105, 31106, 31107, 31108, 31109, 31110, 31111, 31112],
+  "sample_counts": [4096, 16384, 65536, 262144, 1048576],
+  "batch_size": 4096, "test_count": 2048,
+  "streams": {"frame": 1101, "training": 1102, "test": 1103},
+  "model": "Full ambient Gaussian candidate records through nine recursive argmax steps, paired across all readouts and overlaps. Value direction is coordinate zero. The frame has prescribed overlap rho with that direction; d>=2.",
+  "certificate": "A={abs(partial_1 G(b))=1}, b_h=mean candidate signs at step h. Use only original noisy final label Y; sign-correct by partial_1 G(b). Accumulate accepted first-block vector and centered raw-value/key matrix moments; divide by accepted count and known lambda, then apply the same arbitrary-overlap inverse and ambient polar normalization as first_sign.",
+  "fractional_control": "Use Y*partial_1 G(b) for every example, normalize by n*lambda*kappa_1, and apply the same overlap inverse. This is correct at rho=0. For parity the weights equal certificate weights at every overlap, so only expected-count versus observed-count normalization differs and both are valid. For majority product, applying its orthogonal-model fractional calibration outside rho=0 is an explicitly unguaranteed sensitivity control, not a competing overlap theorem.",
+  "zero_acceptance": "If a certificate cell has no accepted observation, retain it and report the predetermined fallback frame consisting of the first d ambient coordinate axes; flag the cell rather than aborting or dropping it.",
+  "primary": "Oriented frame error at every fixed raw-example budget; no threshold-based stopping or fit selection.",
+  "secondary": ["clean readout prediction error", "accepted count and probability", "direct equality of corrected accepted final label and noisy selected first value", "raw moment matrices", "exact zero-overlap fractional calibration and arbitrary-overlap certificate calibration"],
+  "uncertainty": "Twelve paired independent repetitions; pointwise Student-t intervals and paired method contrasts with df=11. No multiplicity adjustment. All conditions and negative outcomes retained.",
+  "evidence": "Frozen source/protocol hashes, complete test inputs/paths/predictions, fitted moments and frames, first 64 raw training examples, every generation-block RNG state, and all condition records. Full training inputs exactly regenerable from RNG/code; not stored in duplicate.",
+  "scope": "Numerical test of actual final-label estimators and certificate cost. Not evidence of a matching arbitrary-overlap lower exponent, and not an SGD experiment. No intermediate labels are provided to either estimator."
+}

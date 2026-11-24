@@ -1,0 +1,21 @@
+{
+  "name": "Finite-overlap binary first-value identification",
+  "status": "fixed before execution; theoretical and implementation checks precede outcomes",
+  "D": 32,
+  "d": 4,
+  "depth_test": 6,
+  "N": 2,
+  "mu": 0.8,
+  "rho": [0.0, 0.25, 0.5, 0.75, 1.0],
+  "seeds": [22101, 22102, 22103, 22104, 22105, 22106, 22107, 22108, 22109, 22110, 22111, 22112],
+  "sample_counts": [1024, 2048, 4096, 8192, 16384, 32768, 65536, 131072, 262144],
+  "test_count": 2048,
+  "batch": 4096,
+  "primary": "Normalized oriented frame error after recovering r=P^T a and H(r), followed by ordinary ambient polar projection.",
+  "comparator": "Original value-orthogonal polar estimator applied without overlap correction; identical noisy first-value labels and examples.",
+  "secondary": "Clean parity and terminal prediction errors on six-step adaptive Gaussian paths; all fixed sample counts, seeds, and overlaps reported.",
+  "quadrature": "128-point Gauss-Jacobi for the spherical first-coordinate law; deterministic bracketed radial inverse; checks against 64 points.",
+  "selection": "No fit selection, reruns based on outcomes, tuning on test data, or claim of a finite-overlap SQ exponent.",
+  "streams": {"frame": 8101, "training": 8102, "test": 8103},
+  "evidence": "Full test inputs, clean paths, both estimators, per-example predictions, cumulative first/value-weighted moments, RNG states, and first 128 raw training observations per seed. Full training stream is reproducible from fixed RNG and code."
+}

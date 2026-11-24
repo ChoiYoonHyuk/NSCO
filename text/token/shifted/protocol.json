@@ -1,0 +1,10 @@
+{
+ "seeds":[127,233,349,461,587],"budgets":[0,128,512,2048,8192],"primary_budgets":[2048,8192],
+ "readouts":["first","last","parity","majority"],"alignment":["successor","same_position"],
+ "batch_size":32,"test_count":512,"sequence_length":98,"hops":3,"width":4,
+ "learning_rate":0.035,"optimizer":"Adam, default betas and epsilon, no weight decay",
+ "initialization":"Q,K independently sampled iid N(0,.2^2); recency raw scalar 0, all 8 arms cloned",
+ "fixed_design":"Use only final labels. One stream pass, no tuning, no checkpoint selection, same old sign-task generators. Window and candidate mask unchanged. Candidate j has key from x_(j-1) or x_j. Shared Q,K,scalar across the three attention steps; exact known readout of path distribution. At evaluation deploy sequential hard argmax. For parity and majority also compute unthresholded expectation sign error as a diagnostic. Public signs are excluded from scores. Input receives no gold indices.",
+ "primary_contrast":"successor minus same-position hard sign error and complete path accuracy, each seed, at 2048 and 8192, unadjusted 95% t interval for each; 10% clean hard error first-grid passage.",
+ "memory_allocator_cap_MiB":1024
+}

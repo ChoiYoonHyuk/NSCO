@@ -1,0 +1,42 @@
+{
+  "direct_terminal": {
+    "lr": 0.003,
+    "residual_cap": 4.0
+  },
+  "context_terminal": {
+    "lr": 0.003,
+    "residual_cap": 1.0
+  },
+  "context_first010": {
+    "lr": 0.003,
+    "residual_cap": 1.0
+  },
+  "context_first100": {
+    "lr": 0.003,
+    "residual_cap": 1.0
+  },
+  "context_random100": {
+    "lr": 0.003,
+    "residual_cap": 4.0
+  },
+  "context_teacher": {
+    "lr": 0.001,
+    "residual_cap": 1.0
+  },
+  "passage_terminal": {
+    "lr": 0.003,
+    "residual_cap": 4.0
+  },
+  "passage_first100": {
+    "lr": 0.003,
+    "residual_cap": 4.0
+  },
+  "question_terminal": {
+    "lr": 0.001,
+    "residual_cap": 1.0
+  },
+  "question_first100": {
+    "lr": 0.003,
+    "residual_cap": 1.0
+  }
+}
